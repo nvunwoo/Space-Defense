@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad7a2c5134f84bf58fecdb75fc92feb6, type: 3}
+  m_Name: Shot Gun Pellets
+  m_EditorClassIdentifier: 
+  objectToCreate: {fileID: 6155642777500827389, guid: 7128a4dbffb0642f18ca817bfafbcbf1, type: 3}
+  parentToPosition: 1
+  faceSpawnPointForward: 1

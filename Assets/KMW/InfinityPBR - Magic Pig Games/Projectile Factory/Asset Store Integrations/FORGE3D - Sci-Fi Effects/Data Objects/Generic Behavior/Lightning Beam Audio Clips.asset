@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5547b9c6cf484ea192708e242a146109, type: 3}
+  m_Name: Lightning Beam Audio Clips
+  m_EditorClassIdentifier: 
+  audioClipOnLaunch: {fileID: 8300000, guid: 206809617a9f6dc4e813dfc96abc1da3, type: 3}
+  launchClipLoop: 1
+  audioClipOnCollision: {fileID: 0}
+  collisionClipLoop: 0
+  audioClipOnDestroy: {fileID: 0}
+  destroyClipLoop: 0
+  audioClipOnEnable: {fileID: 0}
+  enableClipLoop: 0
+  audioClipOnDisable: {fileID: 8300000, guid: 650a66a33ed959c4aa39de2afb9fdbb5, type: 3}
+  disableClipLoop: 0

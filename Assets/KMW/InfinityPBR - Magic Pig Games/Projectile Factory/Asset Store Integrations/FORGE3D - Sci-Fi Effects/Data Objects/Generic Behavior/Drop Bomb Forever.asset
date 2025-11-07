@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad4e024921c480c8278740098b0d9f6, type: 3}
+  m_Name: Drop Bomb Forever
+  m_EditorClassIdentifier: 
+  projectiles:
+  - {fileID: 7256575993036141125, guid: d91aa3961667f4813be28ce0f1e7b623, type: 3}
+  startDelay: 4
+  spawnInterval: 2
+  totalSpawns: -1
+  startSpawningOnLaunch: 1
+  destroyWhenDone: 1
+  destroyDelay: 1
+  spawnAtRandomDirection: 0
+  spawnDirection: {x: 0, y: -1, z: 0}
+  offsetFromSpawner: 1

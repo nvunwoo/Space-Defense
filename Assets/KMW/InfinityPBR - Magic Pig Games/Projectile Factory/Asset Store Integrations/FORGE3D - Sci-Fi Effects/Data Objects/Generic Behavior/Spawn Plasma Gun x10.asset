@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ad4e024921c480c8278740098b0d9f6, type: 3}
+  m_Name: Spawn Plasma Gun x10
+  m_EditorClassIdentifier: 
+  projectiles:
+  - {fileID: 1182444700632882004, guid: 483648242e9e544f9b482c9a4f1511c9, type: 3}
+  startDelay: 4
+  spawnInterval: 0.33
+  totalSpawns: 10
+  startSpawningOnLaunch: 1
+  destroyWhenDone: 1
+  destroyDelay: 1
+  spawnAtRandomDirection: 0
+  spawnDirection: {x: 0, y: 0, z: -1}
