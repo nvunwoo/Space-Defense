@@ -62,7 +62,7 @@ public class EnemyMove : MonoBehaviour
 
         // 애니메이션 전환
         if (animator)
-            animator.Play("Attack1");
+            animator.Play("attack1");
     }
 }
 
