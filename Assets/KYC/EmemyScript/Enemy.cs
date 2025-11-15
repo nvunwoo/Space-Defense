@@ -1,41 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
-/*
 using UnityEngine;
 
-public class EnemyMove : MonoBehaviour
-{
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-}
-*/
- using UnityEngine;
-
 [RequireComponent(typeof(CharacterController))]
-public class EnemyMove : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     public float moveSpeed = 2f;
     public float gravity = 9.81f;
 
     private CharacterController controller;
+    private Animator animator;
     private Vector3 velocity;
+    private bool isAttacking = false;
 
-    void Start()
+    void Awake()
     {
         controller = GetComponent<CharacterController>();
+        animator = GetComponent<Animator>();
+    }
+
+    void OnEnable()
+    {
+        // 적이 풀에서 다시 나올 때 초기화
+        isAttacking = false;
+        animator.Play("Walk");
     }
 
     void Update()
     {
+        if (isAttacking) return;   // 공격 중에는 이동 중지
+
         // 앞으로 움직임 (로컬 Z축)
         Vector3 forwardMove = transform.forward * moveSpeed;
 
@@ -47,5 +41,21 @@ public class EnemyMove : MonoBehaviour
 
         // 이동 적용
         controller.Move((forwardMove + velocity) * Time.deltaTime);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Wall"))
+        {
+            StartAttack();
+        }
+    }
+
+    private void StartAttack()
+    {
+        isAttacking = true;
+
+        // Walk 정지
+        animator.Play("Attack1");
     }
 }

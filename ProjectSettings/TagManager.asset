@@ -4,7 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Enemy
+=======
+  - Anchor
+  - Wall
+>>>>>>> b5df2614b382680b06bb9b6ba6b562a9d6e5518d
   layers:
   - Default
   - TransparentFX
