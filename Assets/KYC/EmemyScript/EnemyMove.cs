@@ -7,6 +7,124 @@ public class EnemyMove : MonoBehaviour
 {
     public float moveSpeed = 2f;
     public float gravity = 9.81f;
+    public int maxHP = 3;
+
+    private CharacterController controller;
+    private Vector3 velocity;
+    private Animator animator;
+
+    private int hp;
+    private bool isDead = false;
+    private bool isAttacking = false;
+
+    void Awake()
+    {
+        controller = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
+    }
+
+    void OnEnable()
+    {
+        hp = maxHP;
+        isDead = false;
+        isAttacking = false;
+        velocity = Vector3.zero;
+
+        if (animator)
+            animator.Play("walk");
+    }
+
+    void Update()
+    {
+        if (isDead || isAttacking)
+            return;  // 공격 중엔 이동하지 않음
+
+        // 앞으로 움직임
+        Vector3 moveDir = transform.forward * moveSpeed;
+
+        // 중력 적용
+        if (!controller.isGrounded)
+            velocity.y -= gravity * Time.deltaTime;
+        else
+            velocity.y = -1f;
+
+        controller.Move((moveDir + velocity) * Time.deltaTime);
+
+    }
+
+
+    //Bullet 충돌 처리
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            TakeDamage(1);
+        }
+        else if (other.CompareTag("Wall"))
+        {
+            StartAttack();
+        }
+    }
+
+    void TakeDamage(int dmg)
+    {
+        if (isDead)
+            return;
+
+        hp -= dmg;
+
+        // Hit 애니메이션 있어도 되고 없어도 됨
+        if (animator)
+            animator.Play("hit", 0, 0); // 즉시 재생
+            animator.Play("walk");
+
+        if (hp <= 0)
+        {
+            Die();
+        }
+    }
+
+    void StartAttack()
+    {
+        if (isDead)
+            return;
+
+        isAttacking = true;
+        if (animator)
+            animator.Play("attack1");
+    }
+
+    
+    //사망 처리
+    void Die()
+    {
+        isDead = true;
+        isAttacking = false;
+
+        if (animator)
+            animator.Play("die");
+
+        // die 애니메이션 길이만큼 기다렸다가 풀로 반환
+        StartCoroutine(ReturnToPoolAfterAnim());
+    }
+
+    System.Collections.IEnumerator ReturnToPoolAfterAnim()
+    {
+        float dieLength = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(dieLength);
+
+        EnemyPool.Instance.ReturnEnemy(this.gameObject);
+    }
+}
+
+/*
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
+public class EnemyMove : MonoBehaviour
+{
+    public float moveSpeed = 2f;
+    public float gravity = 9.81f;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -66,35 +184,4 @@ public class EnemyMove : MonoBehaviour
     }
 }
 
-/*
- using UnityEngine;
-
-[RequireComponent(typeof(CharacterController))]
-public class EnemyMove : MonoBehaviour
-{
-    public float moveSpeed = 2f;
-    public float gravity = 9.81f;
-
-    private CharacterController controller;
-    private Vector3 velocity;
-
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-    }
-
-    void Update()
-    {
-        // 앞으로 움직임 (로컬 Z축)
-        Vector3 forwardMove = transform.forward * moveSpeed;
-
-        // 중력 적용
-        if (!controller.isGrounded)
-            velocity.y -= gravity * Time.deltaTime;
-        else
-            velocity.y = -1f; // 바닥에 딱 붙게
-
-        // 이동 적용
-        controller.Move((forwardMove + velocity) * Time.deltaTime);
-    }
-}*/
+*/
