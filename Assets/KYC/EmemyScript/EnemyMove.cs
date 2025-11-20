@@ -7,7 +7,7 @@ public class EnemyMove : MonoBehaviour
 {
     public float moveSpeed = 2f;
     public float gravity = 9.81f;
-    public int maxHP = 3;
+    public int maxHP = 10;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -16,6 +16,15 @@ public class EnemyMove : MonoBehaviour
     private int hp;
     private bool isDead = false;
     private bool isAttacking = false;
+
+    // ───────── 둔화 관련 추가 ─────────
+    private bool isSlowed = false;
+    private float slowTimer = 0f;
+    private float slowMultiplier = 1f;   // 1이면 정상 속도, 0.5면 50% 속도
+
+    public bool IsSlowed => isSlowed;    // 외부에서 읽기용
+    // ────────────────────────────────
+
 
     void Awake()
     {
@@ -30,6 +39,12 @@ public class EnemyMove : MonoBehaviour
         isAttacking = false;
         velocity = Vector3.zero;
 
+        // 슬로우 상태 초기화 (이 부분이 있어야 재사용 시 깨끗해집니다)
+        isSlowed = false;
+        slowTimer = 0f;
+        slowMultiplier = 1f;
+        // ──────────────────────────────
+
         if (animator)
             animator.Play("walk");
     }
@@ -39,8 +54,23 @@ public class EnemyMove : MonoBehaviour
         if (isDead || isAttacking)
             return;  // 공격 중엔 이동하지 않음
 
+        // ───── 둔화 시간 감소 & 해제 ─────
+        if (isSlowed)
+        {
+            slowTimer -= Time.deltaTime;
+            if (slowTimer <= 0f)
+            {
+                isSlowed = false;
+                slowMultiplier = 1f;
+            }
+        }
+
+        float currentSpeed = moveSpeed * slowMultiplier;  // 슬로우 반영된 속도
+        // ─────────────────────────────
+
+
         // 앞으로 움직임
-        Vector3 moveDir = transform.forward * moveSpeed;
+        Vector3 moveDir = transform.forward * currentSpeed;//moveSpeed=>currentSpeed
 
         // 중력 적용
         if (!controller.isGrounded)
@@ -58,7 +88,7 @@ public class EnemyMove : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(1);
+            TakeDamage(2);
         }
         else if (other.CompareTag("Wall"))
         {
@@ -66,7 +96,7 @@ public class EnemyMove : MonoBehaviour
         }
     }
 
-    void TakeDamage(int dmg)
+    public void TakeDamage(int dmg)
     {
         if (isDead)
             return;
@@ -83,6 +113,19 @@ public class EnemyMove : MonoBehaviour
             Die();
         }
     }
+
+    // ───── 둔화 적용 함수 추가 ─────
+    public void ApplySlow(float multiplier, float duration)
+    {
+        if (isDead)
+            return;
+
+        // 더 강한 슬로우만 갱신하고 싶으면 조건 걸어도 됨
+        isSlowed = true;
+        slowMultiplier = multiplier; // 예: 0.5f → 50% 속도
+        slowTimer = duration;
+    }
+    // ─────────────────────────────
 
     void StartAttack()
     {
