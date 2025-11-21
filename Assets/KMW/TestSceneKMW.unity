@@ -25345,6 +25345,10 @@ PrefabInstance:
       value: Canon_Slow
       objectReference: {fileID: 0}
     - target: {fileID: 7638786492000115554, guid: 5f8572e7d0b58d345b8eefa72b2c5618, type: 3}
+      propertyPath: range
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7638786492000115554, guid: 5f8572e7d0b58d345b8eefa72b2c5618, type: 3}
       propertyPath: aoeRadius
       value: 10
       objectReference: {fileID: 0}
