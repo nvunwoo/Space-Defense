@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5453632192951463461, guid: cb88ccd4fea132a43a5689cc0202f7c4, type: 3}
       propertyPath: moveSpeed
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8610654295540346491, guid: cb88ccd4fea132a43a5689cc0202f7c4, type: 3}
       propertyPath: m_LocalScale.x

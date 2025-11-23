@@ -102,7 +102,7 @@ public class EnemyMove2 : MonoBehaviour
         if (animator) animator.Play("attack2", 0, 0);
     }
 
-    /*
+    
     // Attack2 애니메이션 이벤트에서 호출
     public void FireProjectile()
     {
@@ -111,7 +111,7 @@ public class EnemyMove2 : MonoBehaviour
         GameObject p = Instantiate(projectilePrefab, projectileSpawnPoint.position, projectileSpawnPoint.rotation);
         // 발사체는 스폰 방향 그대로 날아감
     }
-    */
+    
 
     void FindNearestWall()
     {
@@ -130,6 +130,16 @@ public class EnemyMove2 : MonoBehaviour
         }
     }
 
+    //Bullet 충돌 처리
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
+        {
+            TakeDamage(2);
+        }
+        
+    }
+
 
     // ---------------- HP ----------------
     public void TakeDamage(int dmg)
@@ -137,7 +147,9 @@ public class EnemyMove2 : MonoBehaviour
         if (isDead) return;
 
         hp -= dmg;
-        if (animator) animator.Play("hit", 0, 0);
+        if (animator)
+            animator.Play("hit", 0, 0);
+            animator.Play("walk");
 
         if (hp <= 0)
         {
