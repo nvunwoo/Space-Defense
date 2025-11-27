@@ -4,36 +4,69 @@ using UnityEngine;
 
 public class Turret : MonoBehaviour
 {
-    [Header("공격 설정")]
-    public float range = 100f;             // 사거리
-    public float fireInterval = 0.5f;      // 발사 간격
-    public GameObject bulletPrefab;        // 총알 프리팹
+    [Header("기본 공격 수치")]
+    public float baseDamage = 10f;              // 기본 공격력
+    public float damagePerLevel = 2f;           // 공격력 레벨당 증가량
 
-    [Header("총구 설정")]
-    public Transform[] firePoints;         // 총구 두 개 이상
+    public float baseFireInterval = 0.5f;       // 기본 공격 간격(초)
+    public float fireIntervalMultPerLevel = 0.9f; // 공속 레벨당 배율(0.9면 점점 빨라짐)
+
+    public float critChancePerLevel = 0.1f;     // 크리 레벨당 +10%
+    public float baseCritMultiplier = 1.5f;     // 기본 크리 배율(1.5배)
+    public float critMultPerLevel = 0.25f;      // 크리 피해 레벨당 증가
+
+    [Header("레벨 상태 (이 포탑 개별 적용)")]
+    public int damageLevel = 1;
+    public int fireRateLevel = 1;
+    public int critLevel = 0;           // 크리 확률 레벨
+    public int critDamageLevel = 0;     // 크리 피해 레벨
+
+    public int maxDamageLevel = 10;
+    public int maxFireRateLevel = 10;
+    public int maxCritLevel = 10;       // 확률 100%까지
+    public int maxCritDamageLevel = 10;
+
+    [Header("공격/조준 설정")]
+    public float range = 100f;          // 사거리
+    public GameObject bulletPrefab;     // 총알 프리팹
+    public Transform[] firePoints;      // 총구들 (좌우 2개 등)
     int fireIndex = 0;
 
-    [Header("회전 파츠")]
-    public TurretYawController yawPart;    // 좌우 회전 파츠
-    public TurretPitchController pitchPart;// 상하 회전 파츠
+    [Header("회전 파츠 연결")]
+    public TurretYawController yawPart;     // 좌우 회전 파츠
+    public TurretPitchController pitchPart; // 상하 회전 파츠
 
     float fireTimer = 0f;
 
+    // 현재 실사용 수치들
+    public float CurrentDamage
+        => baseDamage + (damageLevel - 1) * damagePerLevel;
+
+    public float CurrentFireInterval
+        => baseFireInterval * Mathf.Pow(fireIntervalMultPerLevel, fireRateLevel - 1);
+
+    public float CurrentCritChance
+        => Mathf.Min(1f, critLevel * critChancePerLevel); // 1 == 100%
+
+    public float CurrentCritMultiplier
+        => baseCritMultiplier + critDamageLevel * critMultPerLevel;
+
     void Update()
     {
-        // 1) 매 프레임 가장 가까운 적 자동 탐색
+        fireTimer -= Time.deltaTime;
+
+        // 1) 사거리 내 가장 가까운 적 찾기
         Transform target = FindNearestEnemyInRange();
 
-        // 2) 회전 파츠에 타겟 전달 (없으면 null 전달 → 회전 멈춤)
+        // 2) 회전 파츠에 타겟 전달
         if (yawPart != null) yawPart.SetTarget(target);
         if (pitchPart != null) pitchPart.SetTarget(target);
 
-        // 3) 쿨타임 관리 + 발사
-        fireTimer -= Time.deltaTime;
+        // 3) 타겟이 있고 쿨타임이 끝났으면 발사
         if (target != null && fireTimer <= 0f)
         {
             Shoot(target);
-            fireTimer = fireInterval;
+            fireTimer = CurrentFireInterval;
         }
     }
 
@@ -51,7 +84,6 @@ public class Turret : MonoBehaviour
 
             float sqrDist = (enemy.transform.position - myPos).sqrMagnitude;
 
-            // 사거리 안에 있으면서 지금까지 중 가장 가까우면 갱신
             if (sqrDist <= nearestSqrDist)
             {
                 nearestSqrDist = sqrDist;
@@ -70,15 +102,53 @@ public class Turret : MonoBehaviour
             return;
         }
 
-        // 이번에 쓸 총구 선택 (좌우 번갈아 사용)
+        // 이번에 쓸 총구 선택 (좌/우 번갈아)
         Transform fp = firePoints[fireIndex];
         fireIndex = (fireIndex + 1) % firePoints.Length;
 
-        // 목표 방향 계산
         Vector3 dir = (target.position - fp.position).normalized;
         Quaternion rot = Quaternion.LookRotation(dir);
 
-        // 총알 생성
-        Instantiate(bulletPrefab, fp.position, rot);
+        GameObject go = Instantiate(bulletPrefab, fp.position, rot);
+        Turret_Bullet bullet = go.GetComponent<Turret_Bullet>();
+        if (bullet != null)
+        {
+            bullet.damage = CurrentDamage;
+            bullet.critChance = CurrentCritChance;
+            bullet.critMultiplier = CurrentCritMultiplier;
+        }
+    }
+
+    // ===== 업그레이드 함수들 (이 포탑 인스턴스만 강화) =====
+
+    // 공격력 업글
+    public void UpgradeDamage()
+    {
+        if (damageLevel >= maxDamageLevel) return;
+        damageLevel++;
+        // 여기서 이 포탑만 이펙트/사운드 재생해도 됨
+    }
+
+    // 공격속도 업글
+    public void UpgradeFireRate()
+    {
+        if (fireRateLevel >= maxFireRateLevel) return;
+        fireRateLevel++;
+    }
+
+    // 크리티컬 업글: 확률 → 100%까지, 그 다음부터는 피해 증가
+    public void UpgradeCrit()
+    {
+        if (CurrentCritChance < 1f && critLevel < maxCritLevel)
+        {
+            // 아직 100% 미만이면 크리 확률 레벨업
+            critLevel++;
+        }
+        else
+        {
+            // 100%이면 크리 피해 레벨업
+            if (critDamageLevel >= maxCritDamageLevel) return;
+            critDamageLevel++;
+        }
     }
 }

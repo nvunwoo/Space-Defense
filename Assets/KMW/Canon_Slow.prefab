@@ -402,10 +402,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9acc5b4ddef36a74f9badb57c0a30692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseDamage: 5
+  damagePerLevel: 2
+  damageLevel: 1
+  maxDamageLevel: 10
+  baseEffectRadius: 50
+  effectRadiusPerLevel: 5
+  effectRadiusLevel: 1
+  maxEffectRadiusLevel: 10
+  baseSlowPercent: 0.3
+  slowPercentPerLevel: 0.05
+  maxSlowPercent: 0.7
+  slowLevel: 0
+  baseSlowDuration: 2
+  slowDurationPerLevel: 0.3
+  slowDurationLevel: 0
   range: 100
   fireInterval: 2
-  aoeRadius: 20
-  shellPrefab: {fileID: 3438468840137857965, guid: c2f6d1057bbb1f54db3dfb670b5b1296, type: 3}
+  shellPrefab: {fileID: 7066141778401878557, guid: 654784a202b8a2d43a43985bc5de5786, type: 3}
   firePoints:
   - {fileID: 2864768954908289900}
   - {fileID: 5239448994165691146}

@@ -2,22 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class CannonShell : MonoBehaviour
 {
-    public float speed = 50f;        // 포탄 속도
-    public float explosionRadius = 20f; // 폭발 범위 반경
-    public float lifeTime = 5f;      // 최대 생존 시간
+    public float speed = 50f;
+    public float lifeTime = 5f;
+
+    [HideInInspector] public float damage = 30f;        // Turret에서 넘겨줌
+    [HideInInspector] public float explosionRadius = 3f;// Turret에서 넘겨줌
 
     private Vector3 targetPos;
     private bool launched = false;
 
-    // Turret에서 호출해서 발사 시작
-    public void Launch(Vector3 startPos, Vector3 targetPosition, float radius)
+    public void Launch(Vector3 startPos, Vector3 targetPosition)
     {
         transform.position = startPos;
         targetPos = targetPosition;
-        explosionRadius = radius;
         launched = true;
     }
 
@@ -28,7 +27,7 @@ public class CannonShell : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         float step = speed * Time.deltaTime;
 
-        // 목적지에 거의 도달
+        // 거의 도착하면 폭발
         if (dir.magnitude <= step)
         {
             Explode();
@@ -47,24 +46,25 @@ public class CannonShell : MonoBehaviour
 
     void Explode()
     {
+        // 폭발 범위 안의 모든 Enemy에게 데미지
         Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
-
         foreach (var col in hits)
         {
-            if (col.CompareTag("Enemy"))
-            {
-                EnemyMove enemy = col.GetComponentInParent<EnemyMove>();
-                if (enemy != null)
-                {
-                    enemy.TakeDamage(1);  // EnemyMove 안의 함수 호출
-                }
-            }
+            if (!col.CompareTag("Enemy")) continue;
+
+            // EnemyMove / EnemyMove2 둘 다 지원
+            var e1 = col.GetComponent<EnemyMove>();
+            if (e1 != null)
+                e1.TakeDamage(Mathf.RoundToInt(damage));
+
+            var e2 = col.GetComponent<EnemyMove2>();
+            if (e2 != null)
+                e2.TakeDamage(Mathf.RoundToInt(damage));
         }
 
         Destroy(gameObject);
     }
 
-    // 씬에서 폭발 범위 확인용 기즈모(에디터에서만 보임)
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f, 0.5f, 0f, 0.4f);

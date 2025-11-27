@@ -15,7 +15,7 @@ public class EnemyMove2 : MonoBehaviour
     public Transform projectileSpawnPoint;
 
     [Header("HP")]
-    public int maxHP = 10;
+    public int maxHP = 100;
 
     private CharacterController controller;
     private Animator animator;
@@ -135,7 +135,7 @@ public class EnemyMove2 : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(2);
+            TakeDamage(0);
         }
         
     }

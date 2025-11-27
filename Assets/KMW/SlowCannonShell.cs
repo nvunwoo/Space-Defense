@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class SlowCannonShell : MonoBehaviour
 {
-    public float speed = 50f;            // 포탄 속도
-    public float explosionRadius = 10f;  // 폭발 범위 반경
-    public float lifeTime = 5f;          // 최대 생존 시간
+    public float speed = 20f;
+    public float lifeTime = 5f;
 
-    public float slowMultiplier = 0.5f;  // 0.5f면 50% 속도
-    public float slowDuration = 3f;      // 둔화 지속 시간
+    [HideInInspector] public float damage = 10f;          // Turret에서 설정
+    [HideInInspector] public float explosionRadius = 5f;  // Turret에서 설정
+    [HideInInspector] public float slowMultiplier = 0.7f; // 예: 0.7 → 30% 감속
+    [HideInInspector] public float slowDuration = 2.0f;   // 슬로우 지속시간(초)
 
     private Vector3 targetPos;
     private bool launched = false;
 
-    public void Launch(Vector3 startPos, Vector3 targetPosition, float radius)
+    public void Launch(Vector3 startPos, Vector3 targetPosition)
     {
         transform.position = startPos;
         targetPos = targetPosition;
-        explosionRadius = radius;
         launched = true;
     }
 
@@ -29,7 +29,6 @@ public class SlowCannonShell : MonoBehaviour
         Vector3 dir = targetPos - transform.position;
         float step = speed * Time.deltaTime;
 
-        // 목적지에 거의 도달
         if (dir.magnitude <= step)
         {
             Explode();
@@ -49,19 +48,24 @@ public class SlowCannonShell : MonoBehaviour
     void Explode()
     {
         Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius);
+
         foreach (var col in hits)
         {
-            if (col.CompareTag("Enemy"))
-            {
-                EnemyMove enemy = col.GetComponentInParent<EnemyMove>();
-                if (enemy != null)
-                {
-                    // 슬로우 갱신
-                    enemy.ApplySlow(slowMultiplier, slowDuration);
-                    // 데미지 적용(제일낮게)
-                    enemy.TakeDamage(1);
+            if (!col.CompareTag("Enemy")) continue;
 
-                }
+            // EnemyMove / EnemyMove2 둘 다 지원
+            var e1 = col.GetComponent<EnemyMove>();
+            if (e1 != null)
+            {
+                e1.TakeDamage(Mathf.RoundToInt(damage));
+                e1.ApplySlow(slowMultiplier, slowDuration);
+            }
+
+            var e2 = col.GetComponent<EnemyMove2>();
+            if (e2 != null)
+            {
+                e2.TakeDamage(Mathf.RoundToInt(damage));
+                e2.ApplySlow(slowMultiplier, slowDuration);
             }
         }
 
@@ -70,7 +74,7 @@ public class SlowCannonShell : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = new Color(0f, 0.5f, 1f, 0.4f);
+        Gizmos.color = new Color(0.2f, 0.6f, 1f, 0.4f);
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

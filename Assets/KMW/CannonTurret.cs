@@ -4,40 +4,59 @@ using UnityEngine;
 
 public class CannonTurret : MonoBehaviour
 {
-    [Header("공격 설정")]
-    public float range = 100f;            // 포탑 사거리
-    public float fireInterval = 2f;      // 발사 간격
-    public float aoeRadius = 20f;         // 폭발 범위 반경
-    public GameObject shellPrefab;       // CannonShell 프리팹
+    [Header("기본 수치")]
+    public float baseDamage = 10f;
+    public float damagePerLevel = 5f;
+    public int damageLevel = 1;
+    public int maxDamageLevel = 10;
 
-    [Header("발사 위치")]
-    public Transform[] firePoints;
+    public float baseExplosionRadius = 30f;
+    public float radiusPerLevel = 5.0f;
+    public int radiusLevel = 1;
+    public int maxRadiusLevel = 10;
+
+    public float baseFireInterval = 2f;
+    public float fireIntervalMultPerLevel = 0.9f;
+    public int fireRateLevel = 1;
+    public int maxFireRateLevel = 10;
+
+    [Header("공격 설정")]
+    public float range = 100f;              // 포탑 사거리
+    public GameObject shellPrefab;         // CannonShell 프리팹
+    public Transform firePoint;            // 포탄 발사 위치
 
     [Header("회전 파츠")]
-    public TurretYawController yawPart;      // 좌우 회전 파츠
-    public TurretPitchController pitchPart;  // 상하 회전 파츠
-
+    public TurretYawController yawPart;    // 좌우 회전
+    public TurretPitchController pitchPart;// 상하 회전
 
     float fireTimer = 0f;
 
-    // 여러 총구를 순차적으로 사용하기 위한 인덱스
-    int currentFirePointIndex = 0;
+    // 현재 실사용 수치
+    public float CurrentDamage
+        => baseDamage + (damageLevel - 1) * damagePerLevel;
+
+    public float CurrentExplosionRadius
+        => baseExplosionRadius + (radiusLevel - 1) * radiusPerLevel;
+
+    public float CurrentFireInterval
+        => baseFireInterval * Mathf.Pow(fireIntervalMultPerLevel, fireRateLevel - 1);
 
     void Update()
     {
-        // 사거리 내에서 가장 큰 무리의 중심이 되는 적 찾기
+        fireTimer -= Time.deltaTime;
+
+        // 1) 사거리 내에서 "가장 큰 무리"의 중심이 되는 적 찾기
         Transform target = FindBestClusterTarget();
 
-        // 회전 파츠에 타겟 전달 없으면 null로 전달 회전 멈춤
+        // 2) 회전 파츠에 타겟 전달
         if (yawPart != null) yawPart.SetTarget(target);
         if (pitchPart != null) pitchPart.SetTarget(target);
 
-        // 쿨타임 관리 & 발사
-        fireTimer -= Time.deltaTime;
+        // 3) 쿨타임 끝났으면 발사
         if (target != null && fireTimer <= 0f)
         {
             Shoot(target.position);
-            fireTimer = fireInterval;
+            fireTimer = CurrentFireInterval;
         }
     }
 
@@ -47,10 +66,10 @@ public class CannonTurret : MonoBehaviour
         if (allEnemies.Length == 0) return null;
 
         float rangeSqr = range * range;
-        float aoeSqr = aoeRadius * aoeRadius;
+        float aoeSqr = CurrentExplosionRadius * CurrentExplosionRadius;
         Vector3 myPos = transform.position;
 
-        // 사거리 안 적들만 모으기
+        // 사거리 안 적만 모으기
         List<Transform> inRange = new List<Transform>();
         foreach (var e in allEnemies)
         {
@@ -59,6 +78,7 @@ public class CannonTurret : MonoBehaviour
             if (sqr <= rangeSqr)
                 inRange.Add(e.transform);
         }
+
         if (inRange.Count == 0) return null;
 
         // 각 적을 중심으로 aoeRadius 안에 몇 마리 있는지 세기
@@ -89,32 +109,12 @@ public class CannonTurret : MonoBehaviour
 
     void Shoot(Vector3 targetPos)
     {
-        if (shellPrefab == null)
+        if (shellPrefab == null || firePoint == null)
         {
-            Debug.LogWarning("shellPrefab이 설정되지 않았습니다.");
+            Debug.LogWarning("shellPrefab 또는 firePoint가 설정되지 않았습니다.");
             return;
         }
 
-        if (firePoints == null || firePoints.Length == 0)
-        {
-            Debug.LogWarning("firePoints가 비어 있습니다. 총구(발사 위치)를 하나 이상 지정하세요.");
-            return;
-        }
-
-        // 이번에 사용할 발사 위치 선택 (순차적으로 사용)
-        Transform firePoint = firePoints[currentFirePointIndex];
-        if (firePoint == null)
-        {
-            Debug.LogWarning("firePoints에 null이 있습니다. Inspector에서 확인해주세요.");
-            return;
-        }
-
-        // 다음 발사 때는 다음 총구 사용
-        currentFirePointIndex++;
-        if (currentFirePointIndex >= firePoints.Length)
-            currentFirePointIndex = 0;
-
-        // 발사 방향(회전용)
         Vector3 dir = (targetPos - firePoint.position).normalized;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
 
@@ -122,7 +122,29 @@ public class CannonTurret : MonoBehaviour
         CannonShell shell = shellObj.GetComponent<CannonShell>();
         if (shell != null)
         {
-            shell.Launch(firePoint.position, targetPos, aoeRadius);
+            shell.damage = CurrentDamage;
+            shell.explosionRadius = CurrentExplosionRadius;
+            shell.Launch(firePoint.position, targetPos);
         }
+    }
+
+    // ===== 업그레이드 함수들 (이 포탑 인스턴스만 강화) =====
+
+    public void UpgradeDamage()
+    {
+        if (damageLevel >= maxDamageLevel) return;
+        damageLevel++;
+    }
+
+    public void UpgradeRadius()
+    {
+        if (radiusLevel >= maxRadiusLevel) return;
+        radiusLevel++;
+    }
+
+    public void UpgradeFireRate()
+    {
+        if (fireRateLevel >= maxFireRateLevel) return;
+        fireRateLevel++;
     }
 }

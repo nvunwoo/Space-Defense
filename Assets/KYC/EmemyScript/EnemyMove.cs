@@ -7,7 +7,7 @@ public class EnemyMove : MonoBehaviour
 {
     public float moveSpeed = 2f;
     public float gravity = 9.81f;
-    public int maxHP = 10;
+    public int maxHP = 100;
 
     private CharacterController controller;
     private Vector3 velocity;
@@ -84,11 +84,12 @@ public class EnemyMove : MonoBehaviour
 
 
     //Bullet 충돌 처리
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(2);
+            TakeDamage(0);
         }
         else if (other.CompareTag("Wall"))
         {
