@@ -10538,8 +10538,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'ENEMIES LEFT: 300'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
-  m_sharedMaterial: {fileID: -1439342301061810006, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10672,8 +10672,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'FORTRESS CURRENT HP: 10000'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
-  m_sharedMaterial: {fileID: -1439342301061810006, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -20150,8 +20150,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'RESOUCE: 3000'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
-  m_sharedMaterial: {fileID: -1439342301061810006, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -20400,8 +20400,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'CURRENT WAVE: 1 / 5'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
-  m_sharedMaterial: {fileID: -1439342301061810006, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -32521,8 +32521,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'FORTRESS MAX HP: 10000'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
-  m_sharedMaterial: {fileID: -1439342301061810006, guid: 374c8a8f0bc98a340a927deeb456f941, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
