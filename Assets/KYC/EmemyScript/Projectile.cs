@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     public float speed = 20f;
-    public float lifetime = 5f;
+    public float lifetime = 1f;
 
     void Update()
     {

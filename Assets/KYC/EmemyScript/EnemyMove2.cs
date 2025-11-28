@@ -57,7 +57,16 @@ public class EnemyMove2 : MonoBehaviour
 
     void Update()
     {
-        if (isDead || isAttacking) return;
+        if (isDead) return;
+
+        if (isAttacking)
+        {
+            if (animator) animator.Play("attack2");
+        }
+        else
+        {
+            MoveForward();
+        }
 
         if (!wall)
         {
@@ -65,7 +74,7 @@ public class EnemyMove2 : MonoBehaviour
             return;
         }
 
-        float dist = Vector3.Distance(transform.position, wall.position);
+        float dist = DistanceToWall();
 
         if (dist <= attackDistance)
         {
@@ -73,7 +82,7 @@ public class EnemyMove2 : MonoBehaviour
             return;
         }
 
-        MoveForward();
+
     }
 
 
@@ -99,7 +108,7 @@ public class EnemyMove2 : MonoBehaviour
     void StartAttack2()
     {
         isAttacking = true;
-        if (animator) animator.Play("attack2", 0, 0);
+        
     }
 
     
@@ -130,6 +139,19 @@ public class EnemyMove2 : MonoBehaviour
         }
     }
 
+    float DistanceToWall()
+    {
+        if (!wall) return Mathf.Infinity;
+
+        Collider wallCol = wall.GetComponent<Collider>();
+        if (!wallCol) return Vector3.Distance(transform.position, wall.position);
+
+        // Collider의 ClosestPoint 사용 → Wall 표면의 가장 가까운 지점 계산
+        Vector3 closest = wallCol.ClosestPoint(transform.position);
+        return Vector3.Distance(transform.position, closest);
+    }
+
+
     //Bullet 충돌 처리
     void OnTriggerEnter(Collider other)
     {
@@ -149,12 +171,13 @@ public class EnemyMove2 : MonoBehaviour
         hp -= dmg;
         if (animator)
             animator.Play("hit", 0, 0);
-            animator.Play("walk");
+            //animator.Play("walk");
 
         if (hp <= 0)
         {
             Die();
         }
+        
     }
 
     public void ApplySlow(float multiplier, float duration)

@@ -51,7 +51,7 @@ public class EnemyMove : MonoBehaviour
 
     void Update()
     {
-        if (isDead || isAttacking)
+        if (isDead)
             return;  // 공격 중엔 이동하지 않음
 
         // ───── 둔화 시간 감소 & 해제 ─────
@@ -65,7 +65,17 @@ public class EnemyMove : MonoBehaviour
             }
         }
 
-        MoveForward();
+        if (isAttacking)
+        {
+            if (animator)
+                animator.Play("attack1");
+        }
+        else
+        {
+            MoveForward();
+        }
+
+            
     }
 
 
@@ -112,7 +122,7 @@ public class EnemyMove : MonoBehaviour
         // Hit 애니메이션 있어도 되고 없어도 됨
         if (animator)
             animator.Play("hit", 0, 0); // 즉시 재생
-            animator.Play("walk");
+            //animator.Play("walk");
 
         if (hp <= 0)
         {
@@ -139,8 +149,7 @@ public class EnemyMove : MonoBehaviour
             return;
 
         isAttacking = true;
-        if (animator)
-            animator.Play("attack1");
+        
     }
 
     
