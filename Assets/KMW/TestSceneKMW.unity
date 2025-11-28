@@ -11390,7 +11390,7 @@ GameObject:
   - component: {fileID: 662355110}
   m_Layer: 0
   m_Name: barricade
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17094,7 +17094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7323503855250137830, guid: 10c64166d3e17894380394aa4de44be1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 273.5
+      value: 312.9
       objectReference: {fileID: 0}
     - target: {fileID: 7323503855250137830, guid: 10c64166d3e17894380394aa4de44be1, type: 3}
       propertyPath: m_LocalPosition.y

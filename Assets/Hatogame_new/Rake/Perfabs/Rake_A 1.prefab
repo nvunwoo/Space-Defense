@@ -204,7 +204,7 @@ MonoBehaviour:
   attackDistance: 20
   projectilePrefab: {fileID: 8496464177698536364, guid: 0bf4e2e102e0b404286e71769baff387, type: 3}
   projectileSpawnPoint: {fileID: 7308364371814696538}
-  maxHP: 10
+  maxHP: 100
 --- !u!136 &-5470765421320505192
 CapsuleCollider:
   m_ObjectHideFlags: 0

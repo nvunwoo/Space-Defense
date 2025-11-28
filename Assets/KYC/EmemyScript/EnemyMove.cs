@@ -65,14 +65,17 @@ public class EnemyMove : MonoBehaviour
             }
         }
 
-        float currentSpeed = moveSpeed * slowMultiplier;  // 슬로우 반영된 속도
-        // ─────────────────────────────
+        MoveForward();
+    }
 
 
-        // 앞으로 움직임
-        Vector3 moveDir = transform.forward * currentSpeed;//moveSpeed=>currentSpeed
+    void MoveForward()
+    {
+        // 슬로우 유지하면서 walk 계속
+        float currentSpeed = moveSpeed * slowMultiplier;
 
-        // 중력 적용
+        Vector3 moveDir = transform.forward * currentSpeed;
+
         if (!controller.isGrounded)
             velocity.y -= gravity * Time.deltaTime;
         else
@@ -80,6 +83,8 @@ public class EnemyMove : MonoBehaviour
 
         controller.Move((moveDir + velocity) * Time.deltaTime);
 
+        if (animator && !animator.GetCurrentAnimatorStateInfo(0).IsName("walk"))
+            animator.Play("walk");
     }
 
 
