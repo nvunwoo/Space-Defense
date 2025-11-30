@@ -41,7 +41,7 @@ public class EnemyMove2 : MonoBehaviour
 
     void OnEnable()
     {
-        hp = maxHP;
+        hp = Mathf.RoundToInt(maxHP * WaveManager.Instance.GetHPBoost());
         isDead = false;
         isAttacking = false;
         isSlowed = false;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private float spawnInterval = 2f;
+    [SerializeField] private float baseSpawnInterval = 2f;
 
     [Header("Spawn Range")]
     [SerializeField] private float rangeX = 5f;
@@ -14,21 +14,27 @@ public class EnemySpawner : MonoBehaviour
 
     void Update()
     {
+        // 준비시간이면 스폰 정지
+        if (WaveManager.Instance.isPreparing)
+            return;
+
+        float interval = baseSpawnInterval / WaveManager.Instance.GetSpawnSpeedMultiplier();
+
         if (Time.time >= nextSpawn)
         {
             SpawnEnemy();
-            nextSpawn = Time.time + spawnInterval;
+            nextSpawn = Time.time + interval;
         }
     }
 
     void SpawnEnemy()
     {
-        // X, Z 모두 랜덤
         float randomX = Random.Range(-rangeX, rangeX);
         float randomZ = Random.Range(-rangeZ, rangeZ);
 
         Vector3 spawnPos = transform.position + new Vector3(randomX, 0f, randomZ);
         Quaternion spawnRot = Quaternion.Euler(0, -90f, 0);
+
         EnemyPool.Instance.GetEnemy(spawnPos, spawnRot);
     }
 

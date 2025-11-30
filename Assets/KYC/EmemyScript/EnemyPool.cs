@@ -6,7 +6,7 @@ public class EnemyPool : MonoBehaviour
 {
     public static EnemyPool Instance;
 
-    [SerializeField] private GameObject[] enemyPrefabs;   // ★ 여러 프리팹 받기
+    [SerializeField] private GameObject[] enemyPrefabs;   // 여러 프리팹 받기
     [SerializeField] private int poolSizePerType = 5;     // 각 프리팹당 풀 크기
 
     private Dictionary<GameObject, Queue<GameObject>> pools
@@ -17,7 +17,7 @@ public class EnemyPool : MonoBehaviour
         if (Instance == null) Instance = this;
         else Destroy(gameObject);
 
-        // ★ 프리팹 종류별로 각각 풀 생성
+        //프리팹 종류별로 각각 풀 생성
         foreach (var prefab in enemyPrefabs)
         {
             var queue = new Queue<GameObject>();
@@ -34,11 +34,11 @@ public class EnemyPool : MonoBehaviour
 
     public GameObject GetEnemy(Vector3 position, Quaternion rotation)
     {
-        // ★ 랜덤으로 어떤 프리팹을 꺼낼지 선택
+        //랜덤으로 어떤 프리팹을 꺼낼지 선택
         GameObject prefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
         Queue<GameObject> queue = pools[prefab];
 
-        // ★ 풀 안에 있으면 꺼내고, 없으면 새로 생성
+        //풀 안에 있으면 꺼내고, 없으면 새로 생성
         GameObject enemy = queue.Count > 0 ? queue.Dequeue() : Instantiate(prefab);
         enemy.transform.SetPositionAndRotation(position, rotation);
         enemy.SetActive(true);
@@ -49,7 +49,7 @@ public class EnemyPool : MonoBehaviour
     {
         enemy.SetActive(false);
 
-        // ★ 되돌아온 적이 어떤 프리팹에서 온 애인지 판별
+        //되돌아온 적이 어떤 프리팹에서 온 애인지 판별
         GameObject key = null;
 
         foreach (var prefab in enemyPrefabs)
