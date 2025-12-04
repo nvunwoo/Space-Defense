@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea20c32fd012f5149a907f30a6f93fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnInterval: 2
-  spawnRangeX: 5
-  spawnZ: 0
+  baseSpawnInterval: 4
+  rangeX: 5
+  rangeZ: 5
