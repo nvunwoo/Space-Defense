@@ -7,6 +7,14 @@ TagManager:
   - Wall
   - Enemy
   - Bullet
+  - LeftSight
+  - RightSight
+  - Weapon
+  - Grabbable
+  - Anchor
+  - Controller
+  - SpawnButton
+  - Hand
   layers:
   - Default
   - TransparentFX
