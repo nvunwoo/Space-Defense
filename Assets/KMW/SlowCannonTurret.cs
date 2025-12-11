@@ -125,37 +125,43 @@ public class SlowCannonTurret : MonoBehaviour
     }
 
     void Shoot(Vector3 targetPos)
-{
-    if (firePoints == null || firePoints.Length == 0 || shellPrefab == null)
-        Debug.LogWarning("shellPrefab 또는 firePoint가 설정되지 않았습니다.");
-        return;
-
-    // 사용할 총구 선택
-    Transform fp = firePoints[fireIndex];
-
-    // 다음 총구로 인덱스 변경
-    fireIndex = (fireIndex + 1) % firePoints.Length;
-
-    // 총구에서 직접 사운드 재생
-    AudioSource src = fp.GetComponent<AudioSource>();
-    if (src != null && fireSound != null)
-        src.PlayOneShot(fireSound);
-
-    Vector3 dir = (targetPos - fp.position).normalized;
-    Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
-
-    GameObject shellObj = Instantiate(shellPrefab, fp.position, rot);
-    SlowCannonShell shell = shellObj.GetComponent<SlowCannonShell>();
-    if (shell != null)
     {
-        shell.damage = CurrentDamage;
-        shell.explosionRadius = CurrentEffectRadius;
-        shell.slowMultiplier = CurrentSlowMultiplier;
-        shell.slowDuration = CurrentSlowDuration;
+        if (firePoints == null || firePoints.Length == 0 || shellPrefab == null)
+        {
+            Debug.LogWarning("SlowCannonTurret: shellPrefab 또는 firePoints가 설정되지 않았습니다.", this);
+            return;
+        }
 
-        shell.Launch(fp.position, targetPos);
+        // 사용할 총구 선택
+        Transform fp = firePoints[fireIndex];
+
+        // 다음 총구로 인덱스 변경
+        fireIndex = (fireIndex + 1) % firePoints.Length;
+
+        // 총구에서 직접 사운드 재생
+        AudioSource src = fp.GetComponent<AudioSource>();
+        if (src != null && fireSound != null)
+        {
+            src.PlayOneShot(fireSound);
+            // 필요하면 볼륨 조절: src.PlayOneShot(fireSound, 0.6f);
+        }
+
+        Vector3 dir = (targetPos - fp.position).normalized;
+        Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
+
+        GameObject shellObj = Instantiate(shellPrefab, fp.position, rot);
+        SlowCannonShell shell = shellObj.GetComponent<SlowCannonShell>();
+        if (shell != null)
+        {
+            shell.damage = CurrentDamage;
+            shell.explosionRadius = CurrentEffectRadius;
+            shell.slowMultiplier = CurrentSlowMultiplier;
+            shell.slowDuration = CurrentSlowDuration;
+
+            shell.Launch(fp.position, targetPos);
+        }
     }
-}
+
     // ===== 업그레이드 함수들 (이 포탑 인스턴스만 강화) =====
 
     // 공격력 업그레이드
