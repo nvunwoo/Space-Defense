@@ -38,6 +38,9 @@ public class Turret : MonoBehaviour
 
     float fireTimer = 0f;
 
+    [Header("발사 사운드")]
+    public AudioClip fireSound;      // 발사 사운드 파일
+
     // 현재 실사용 수치들
     public float CurrentDamage
         => baseDamage + (damageLevel - 1) * damagePerLevel;
@@ -106,6 +109,16 @@ public class Turret : MonoBehaviour
         Transform fp = firePoints[fireIndex];
         fireIndex = (fireIndex + 1) % firePoints.Length;
 
+        // 총구에 붙은 AudioSource에서 소리 재생
+        if (fireSound != null)
+        {
+            AudioSource src = fp.GetComponent<AudioSource>();
+            if (src != null)
+            {
+                src.PlayOneShot(fireSound);
+            }
+        }
+
         Vector3 dir = (target.position - fp.position).normalized;
         Quaternion rot = Quaternion.LookRotation(dir);
 
@@ -118,6 +131,7 @@ public class Turret : MonoBehaviour
             bullet.critMultiplier = CurrentCritMultiplier;
         }
     }
+
 
     // ===== 업그레이드 함수들 (이 포탑 인스턴스만 강화) =====
 

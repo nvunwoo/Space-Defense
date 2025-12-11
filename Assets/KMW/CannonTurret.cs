@@ -31,6 +31,9 @@ public class CannonTurret : MonoBehaviour
 
     float fireTimer = 0f;
 
+    [Header("발사 사운드")]
+    public AudioClip fireSound;      // 발사 사운드 파일
+
     // 현재 실사용 수치
     public float CurrentDamage
         => baseDamage + (damageLevel - 1) * damagePerLevel;
@@ -115,6 +118,11 @@ public class CannonTurret : MonoBehaviour
             return;
         }
 
+        // firePoint에서 발사음 재생
+        AudioSource src = firePoint.GetComponent<AudioSource>();
+        if (src != null && fireSound != null)
+            src.PlayOneShot(fireSound);
+
         Vector3 dir = (targetPos - firePoint.position).normalized;
         Quaternion rot = Quaternion.LookRotation(dir, Vector3.up);
 
@@ -127,6 +135,7 @@ public class CannonTurret : MonoBehaviour
             shell.Launch(firePoint.position, targetPos);
         }
     }
+
 
     // ===== 업그레이드 함수들 (이 포탑 인스턴스만 강화) =====
 
