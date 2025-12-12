@@ -104,7 +104,7 @@ public class EnemyMove : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(0);
+            GetDamage(0);
         }
         else if (other.CompareTag("Wall"))
         {
@@ -112,7 +112,8 @@ public class EnemyMove : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int dmg)
+
+    public void GetDamage(int dmg)
     {
         if (isDead)
             return;

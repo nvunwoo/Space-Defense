@@ -157,14 +157,14 @@ public class EnemyMove2 : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            TakeDamage(0);
+            GetDamage(0);
         }
         
     }
 
 
     // ---------------- HP ----------------
-    public void TakeDamage(int dmg)
+    public void GetDamage(int dmg)
     {
         if (isDead) return;
 
